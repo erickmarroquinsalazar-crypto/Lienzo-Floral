@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<title>Lienzo Floral</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#f7f4ef;font-family:'DM Sans',sans-serif;color:#2c2c2c;-webkit-tap-highlight-color:transparent}
+/* APP SHELL */
+.app{display:flex;flex-direction:column;height:100vh;height:-webkit-fill-available;overflow:hidden}
+/* TOP BAR */
+.topbar{background:#222;padding:env(safe-area-inset-top,14px) 18px 14px;padding-top:calc(env(safe-area-inset-top,0px) + 14px);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.tb-logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:#f0ebe2;letter-spacing:.3px}
+.tb-logo span{font-size:10px;color:#666;letter-spacing:1.5px;text-transform:uppercase;display:block;margin-top:1px}
+.tb-actions{display:flex;gap:8px}
+/* PAGE */
+.page{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px;background:#f7f4ef}
+/* BOTTOM NAV */
+.botnav{background:#222;display:flex;flex-shrink:0;padding-bottom:env(safe-area-inset-bottom,0px)}
+.bni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px;cursor:pointer;transition:all .13s;border-top:2px solid transparent;gap:3px}
+.bni.on{border-top-color:#7a9e7e}
+.bni-icon{font-size:20px;line-height:1}
+.bni-lbl{font-size:10px;color:#666;letter-spacing:.3px}
+.bni.on .bni-lbl{color:#c8dbc9}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;transition:all .13s;white-space:nowrap;-webkit-appearance:none}
+.b-dark{background:#2c2c2c;color:#fff}
+.b-sage{background:#7a9e7e;color:#fff}
+.b-rose{background:#c97b84;color:#fff}
+.b-ghost{background:#fff;color:#555;border:1px solid #e8e2d9}
+.b-red{background:#fde8e8;color:#9e3a3a}
+.b-sm{padding:6px 12px;font-size:12px}
+.b-full{width:100%;justify-content:center;padding:13px}
+/* CARDS */
+.card{background:#fff;border-radius:14px;border:1px solid #e8e2d9;overflow:hidden;margin-bottom:14px}
+.ch{padding:14px 16px;border-bottom:1px solid #e8e2d9;display:flex;align-items:center;justify-content:space-between}
+.ch h3{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400}
+/* STATS */
+.stats2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stat{background:#fff;border-radius:14px;border:1px solid #e8e2d9;padding:16px}
+.sn{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;line-height:1}
+.sl{font-size:10px;color:#7a7a7a;margin-top:4px;letter-spacing:.4px;text-transform:uppercase}
+/* ROWS */
+.crow{display:flex;align-items:center;gap:11px;padding:12px 16px;border-bottom:1px solid #f0ebe2;transition:background .1s;cursor:pointer}
+.crow:last-child{border-bottom:none}
+.crow:active{background:#faf8f4}
+.dr{display:flex;align-items:center;gap:11px;padding:12px 16px;border-bottom:1px solid #f0ebe2}
+.dr:last-child{border-bottom:none}
+.dd{min-width:48px;text-align:center;background:#f7f4ef;border-radius:8px;padding:6px 4px;flex-shrink:0}
+.ddn{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;line-height:1}
+.ddm{font-size:9px;color:#9a9a9a;text-transform:uppercase;letter-spacing:.4px}
+/* AVATAR */
+.av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#c8dbc9,#e8c8cb);display:flex;align-items:center;justify-content:center;font-size:16px;font-family:'Cormorant Garamond',serif;color:#3a5a3a;font-weight:600;flex-shrink:0}
+/* TAGS */
+.tag{display:inline-block;background:#f0ebe2;color:#6a5a40;padding:2px 7px;border-radius:10px;font-size:10px;margin-right:3px;margin-top:2px}
+/* FORM */
+.fld{margin-bottom:14px}
+.flbl{display:block;font-size:11px;font-weight:500;color:#7a7a7a;margin-bottom:5px;letter-spacing:.5px;text-transform:uppercase}
+.inp{width:100%;padding:11px 13px;border:1px solid #e8e2d9;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:15px;color:#2c2c2c;background:#fff;outline:none;-webkit-appearance:none}
+.inp:focus{border-color:#7a9e7e}
+textarea.inp{resize:none;min-height:72px}
+select.inp{appearance:none;-webkit-appearance:none;cursor:pointer}
+.si{width:100%;padding:10px 13px;border:1px solid #e8e2d9;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;background:#f7f4ef;color:#2c2c2c;outline:none;-webkit-appearance:none}
+/* MODAL */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:flex;align-items:flex-end;justify-content:center}
+.modal{background:#fff;border-radius:20px 20px 0 0;width:100%;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:env(safe-area-inset-bottom,0px)}
+.mhandle{width:36px;height:4px;background:#ddd;border-radius:2px;margin:12px auto 8px}
+.mhead{padding:8px 20px 14px;border-bottom:1px solid #e8e2d9;display:flex;justify-content:space-between;align-items:center}
+.mtitle{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:300}
+.msub{font-size:12px;color:#7a7a7a;margin-top:2px}
+.mclose{background:#f0ebe2;border:none;cursor:pointer;font-size:16px;color:#555;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center}
+.mbody{padding:16px 20px 28px}
+/* MSG CARDS */
+.mc{background:#faf8f4;border:1px solid #e8e2d9;border-radius:12px;padding:13px 14px;margin-bottom:10px}
+.mc-lbl{font-size:10px;font-weight:500;color:#9a9a9a;letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px}
+.mc-txt{font-size:13.5px;color:#2c2c2c;line-height:1.65}
+.mc-cat{font-size:11px;font-weight:600;color:#7a9e7e;letter-spacing:1.2px;text-transform:uppercase;margin:16px 0 8px;display:flex;align-items:center;gap:5px}
+/* PROMO CARD */
+.promo-card{background:linear-gradient(135deg,#fff5f5,#fff9f0);border:1.5px solid #f0d0d0;border-radius:14px;overflow:hidden;margin-bottom:10px}
+.promo-img{width:100%;height:200px;object-fit:cover;display:block}
+.promo-body{padding:13px 14px}
+.promo-price{display:inline-block;background:#c97b84;color:#fff;font-size:13px;font-weight:600;padding:4px 12px;border-radius:20px;margin-bottom:6px}
+/* CALENDAR */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cdn{text-align:center;font-size:10px;font-weight:500;color:#9a9a9a;padding:4px 2px;letter-spacing:.3px}
+.cday{border-radius:6px;min-height:56px;padding:4px 3px;border:1px solid transparent;cursor:pointer}
+.cday:active{border-color:#7a9e7e}
+.ctoday{background:#f5f0ea;border-color:#e8e2d9 !important}
+.cnum{font-size:11px;font-weight:500;color:#9a9a9a;margin-bottom:2px}
+.ctoday .cnum{color:#c97b84;font-weight:700}
+.cev{font-size:8.5px;border-radius:3px;padding:1px 3px;margin-bottom:1px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:#fff}
+.evc{background:#7a9e7e}.evp{background:#c47a1e}.evd{background:#4a4a6a}.evx{background:#9e3a3a}
+/* BADGE */
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:500}
+/* TOAST */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#2c2c2c;color:#fff;padding:10px 18px;border-radius:20px;font-size:13px;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,.25);animation:su .17s ease;pointer-events:none;white-space:nowrap}
+@keyframes su{from{transform:translateX(-50%) translateY(8px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+.empty{text-align:center;padding:28px 16px;color:#9a9a9a;font-size:14px}
+.empty-ic{font-size:30px;margin-bottom:8px}
+.hidden{display:none!important}
+.row-actions{display:flex;gap:6px;flex-shrink:0}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;color:#7a7a7a;margin-bottom:10px;margin-top:4px}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="tb-logo">Lienzo Floral <span>CRM · Gestión</span></div>
+    <div class="tb-actions" id="tb-actions"></div>
+  </div>
+
+  <!-- PAGE -->
+  <div class="page" id="page"></div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="botnav" id="botnav">
+    <div class="bni on" data-tab="dashboard"><div class="bni-icon">🌸</div><div class="bni-lbl">Panel</div></div>
+    <div class="bni" data-tab="clients"><div class="bni-icon">👤</div><div class="bni-lbl">Clientes</div></div>
+    <div class="bni" data-tab="messages"><div class="bni-icon">💬</div><div class="bni-lbl">Mensajes</div></div>
+    <div class="bni" data-tab="calendar"><div class="bni-icon">📅</div><div class="bni-lbl">Calendario</div></div>
+    <div class="bni" data-tab="deliveries"><div class="bni-icon">🚚</div><div class="bni-lbl">Entregas</div></div>
+  </nav>
+</div>
+
+<!-- TOAST -->
+<div class="toast hidden" id="toast"></div>
+<!-- MODAL -->
+<div id="modal-container"></div>
+
+<script>
+const MONTHS=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+const DAYS=["D","L","M","X","J","V","S"];
+const TODAY=new Date().toISOString().split("T")[0];
+
+const SEED_C=[
+  {id:1,name:"Sofía Martínez",phone:"5512345678",email:"sofia@email.com",lastPurchase:"2026-04-10",totalOrders:3,tags:["boda","frecuente"],notes:"Le gustan las rosas blancas y las peonías"},
+  {id:2,name:"Ana Torres",phone:"5598765432",email:"ana@email.com",lastPurchase:"2026-04-22",totalOrders:1,tags:["primera compra"],notes:"Arreglo de cumpleaños, cliente nueva"},
+  {id:3,name:"Carlos Vega",phone:"5511112222",email:"carlos@email.com",lastPurchase:"2026-03-15",totalOrders:5,tags:["corporativo","frecuente"],notes:"Pedidos para oficina cada mes"},
+  {id:4,name:"Lucía Herrera",phone:"5533334444",email:"lucia@email.com",lastPurchase:"2026-04-28",totalOrders:2,tags:["aniversario"],notes:"Siempre pide caja con chocolates"},
+];
+const SEED_D=[
+  {id:1,clientId:1,clientName:"Sofía Martínez",date:"2026-05-05",time:"10:00",address:"Calle Rosal 45, Col. Jardines",product:"Ramo de novia - Rosas blancas",status:"confirmed",notes:""},
+  {id:2,clientId:3,clientName:"Carlos Vega",date:"2026-05-06",time:"14:00",address:"Av. Insurgentes 1200, Piso 3",product:"Arreglo corporativo mensual",status:"pending",notes:"Pasa por recepción"},
+  {id:3,clientId:4,clientName:"Lucía Herrera",date:"2026-05-10",time:"12:00",address:"Privada Magnolia 8",product:"Caja de flores + chocolates",status:"confirmed",notes:""},
+  {id:4,clientId:2,clientName:"Ana Torres",date:"2026-05-12",time:"09:00",address:"Lomas de Chapultepec 22",product:"Bouquet de cumpleaños",status:"pending",notes:""},
+];
+
+function load(k,s){try{const v=localStorage.getItem(k);return v?JSON.parse(v):s;}catch(e){return s;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+
+let clients=load("lf_clients",SEED_C);
+let deliveries=load("lf_deliveries",SEED_D);
+function saveC(){save("lf_clients",clients);}
+function saveD(){save("lf_deliveries",deliveries);}
+
+const daysSince=d=>Math.floor((new Date()-new Date(d))/86400000);
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+
+function badge(s){
+  const m={confirmed:["#3a7d5e","#d4f0e3","Confirmada"],pending:["#c47a1e","#fef3da","Pendiente"],delivered:["#4a4a6a","#ebebf5","Entregada"],cancelled:["#9e3a3a","#fde8e8","Cancelada"]};
+  const[c,bg,l]=m[s]||m.pending;
+  return`<span class="badge" style="background:${bg};color:${c}">${l}</span>`;
+}
+function av(n){return`<div class="av">${(n||"?")[0].toUpperCase()}</div>`;}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.remove("hidden");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.add("hidden"),2700);}
+
+// NAV
+let tab="dashboard",searchQ="",selClientId=null,calMonth=new Date().getMonth(),calYear=new Date().getFullYear();
+
+document.getElementById("botnav").addEventListener("click",e=>{
+  const ni=e.target.closest(".bni");if(!ni)return;
+  tab=ni.dataset.tab;searchQ="";
+  document.querySelectorAll(".bni").forEach(n=>n.classList.toggle("on",n.dataset.tab===tab));
+  renderActions();renderPage();
+});
+
+function renderActions(){
+  const el=document.getElementById("tb-actions");
+  if(tab==="clients")el.innerHTML=`<button class="btn b-sage b-sm" onclick="openClientModal()">+ Cliente</button>`;
+  else if(tab==="calendar"||tab==="deliveries")el.innerHTML=`<button class="btn b-sage b-sm" onclick="openDelivModal()">+ Entrega</button>`;
+  else el.innerHTML="";
+}
+
+function renderPage(){
+  const p=document.getElementById("page");
+  if(tab==="dashboard")p.innerHTML=renderDash();
+  else if(tab==="clients")p.innerHTML=renderClients();
+  else if(tab==="messages")p.innerHTML=renderMessages();
+  else if(tab==="calendar")p.innerHTML=renderCalendar();
+  else if(tab==="deliveries")p.innerHTML=renderDeliveries();
+  bindEvents();
+}
+
+// DASHBOARD
+function renderDash(){
+  const nowYM=`${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2,"0")}`;
+  const thisMD=deliveries.filter(d=>d.date.startsWith(nowYM)).length;
+  const pendN=deliveries.filter(d=>d.status==="pending").length;
+  const recon=clients.filter(c=>daysSince(c.lastPurchase)>25);
+  const upcoming=deliveries.filter(d=>d.date>=TODAY).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,4);
+  return`
+  <div class="stats2">
+    <div class="stat"><div style="font-size:18px;margin-bottom:4px">🌿</div><div class="sn">${clients.length}</div><div class="sl">Clientes</div></div>
+    <div class="stat"><div style="font-size:18px;margin-bottom:4px">📦</div><div class="sn">${thisMD}</div><div class="sl">Este mes</div></div>
+    <div class="stat"><div style="font-size:18px;margin-bottom:4px">⏳</div><div class="sn">${pendN}</div><div class="sl">Pendientes</div></div>
+    <div class="stat"><div style="font-size:18px;margin-bottom:4px">💌</div><div class="sn">${recon.length}</div><div class="sl">Reconectar</div></div>
+  </div>
+  <div class="card">
+    <div class="ch"><h3>Próximas Entregas</h3></div>
+    ${upcoming.length?upcoming.map(d=>`
+    <div class="dr">
+      <div class="dd"><div class="ddn">${d.date.split("-")[2]}</div><div class="ddm">${MONTHS[parseInt(d.date.split("-")[1])-1].slice(0,3)}</div></div>
+      <div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(d.clientName)}</div><div style="font-size:12px;color:#7a7a7a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(d.product)}</div></div>
+      ${badge(d.status)}
+    </div>`).join(""):`<div class="empty"><div class="empty-ic">📭</div>Sin entregas próximas</div>`}
+  </div>
+  <div class="card">
+    <div class="ch"><h3>Reconectar 💌</h3></div>
+    ${recon.length?recon.slice(0,4).map(c=>`
+    <div class="crow" data-sel-msg="${c.id}">
+      ${av(c.name)}
+      <div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:500">${esc(c.name)}</div><div style="font-size:12px;color:#7a7a7a">Sin compra hace ${daysSince(c.lastPurchase)} días</div></div>
+      <button class="btn b-rose b-sm">Msg</button>
+    </div>`).join(""):`<div class="empty"><div class="empty-ic">🎉</div>¡Todos activos!</div>`}
+  </div>`;
+}
+
+// CLIENTS
+function renderClients(){
+  const q=searchQ.toLowerCase();
+  const f=clients.filter(c=>c.name.toLowerCase().includes(q)||c.phone.includes(q)||(c.tags||[]).join(" ").toLowerCase().includes(q));
+  return`
+  <div style="margin-bottom:12px"><input class="si" id="si" placeholder="Buscar nombre, teléfono, etiqueta…" value="${esc(searchQ)}"/></div>
+  <div class="card">
+    <div class="ch"><h3>${f.length} cliente${f.length!==1?"s":""}</h3></div>
+    ${f.length?f.map(c=>`
+    <div class="crow" style="flex-wrap:wrap;gap:8px">
+      <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
+        ${av(c.name)}
+        <div style="min-width:0">
+          <div style="font-size:14px;font-weight:500">${esc(c.name)}</div>
+          <div style="font-size:12px;color:#7a7a7a">${esc(c.phone)}</div>
+          <div>${(c.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join("")}</div>
+        </div>
+      </div>
+      <div class="row-actions">
+        <button class="btn b-sage b-sm" onclick="openMsgModal(${c.id})">✉️</button>
+        <button class="btn b-ghost b-sm" onclick="openWA('${esc(c.phone)}','¡Hola ${esc(c.name)}!')">💬</button>
+        <button class="btn b-ghost b-sm" onclick="openClientModal(${c.id})">✏️</button>
+        <button class="btn b-red b-sm" onclick="deleteClient(${c.id})">🗑</button>
+      </div>
+    </div>`).join(""):`<div class="empty"><div class="empty-ic">🔍</div>Sin resultados</div>`}
+  </div>`;
+}
+
+// MESSAGES
+const TMPL={
+  thanks:[
+    {id:"t1",label:"Post-venta calidez",text:n=>`¡Hola ${n}! 🌸 Gracias por confiar en Lienzo Floral. Espero que tu arreglo haya llenado ese momento especial de belleza. Si tienes algún comentario o foto que quieras compartir, ¡nos encantaría verla! Con cariño, Lienzo Floral 🌿`},
+    {id:"t2",label:"Post-venta profesional",text:n=>`Hola ${n}, gracias por tu compra en Lienzo Floral. Fue un placer preparar tu pedido. Si necesitas algo más o tienes alguna duda, estamos aquí para ayudarte. ¡Hasta pronto! — Lienzo Floral`},
+  ],
+  followup:[
+    {id:"f1",label:"Recordatorio suave",text:n=>`¡Hola ${n}! 🌷 Ha pasado un tiempo desde tu última visita a Lienzo Floral y queremos saber cómo estás. ¿Se acerca alguna ocasión especial? Tenemos arreglos nuevos que te van a encantar. ¡Escríbenos cuando quieras! 🌸`},
+    {id:"f2",label:"Invitación colección nueva",text:n=>`Hola ${n} ✨ En Lienzo Floral acabamos de renovar nuestra colección de temporada y pensamos en ti. ¿Te gustaría ver lo que tenemos? Contamos con diseños exclusivos para cada ocasión. ¡Te esperamos! 🌿`},
+  ],
+  birthday:[{id:"b1",label:"Cumpleaños",text:n=>`¡Feliz cumpleaños ${n}! 🎂🌸 En Lienzo Floral te deseamos un día lleno de amor y flores. Como regalo, te ofrecemos un 10% de descuento en tu próximo pedido. ¡Disfruta tu día especial! 🥂`}],
+  promo:[
+    {id:"p1",label:"Promoción general",text:n=>`¡Hola ${n}! 🌺 Esta semana en Lienzo Floral tenemos una promoción especial que no querrás perderte. Escríbenos y te contamos todos los detalles. ¡Síguenos en Instagram @lienzo.floral para más sorpresas! 💐`},
+    {id:"p2",label:"🌹 Rosas rojas desde $349",text:n=>`¡Hola ${n}! 🌹 Tenemos una promoción especial para ti en Lienzo Floral:\n\n🌹 Arreglo de rosas rojas desde $349\n\nElegantes, frescas y llenas de amor — perfectas para sorprender a alguien especial 🌿\n\n¿Te interesa? Escríbenos y te damos más detalles. ¡Síguenos en Instagram @lienzo.floral! 💐`,isPromo:true},
+  ],
+};
+const PROMO_IMG="https://images.unsplash.com/photo-1587530588853-5e23e69e4e7e?w=700&q=80&fit=crop";
+
+function msgCards(name){
+  const cats=[["thanks","🌸","Post-Venta"],["followup","💌","Seguimiento"],["birthday","🎂","Cumpleaños"],["promo","🌺","Promoción"]];
+  return cats.map(([k,ic,lbl])=>`
+    <div class="mc-cat">${ic} ${lbl}</div>
+    ${TMPL[k].map(t=>{
+      const txt=t.text(name);
+      if(t.isPromo)return`<div class="promo-card">
+        <img class="promo-img" src="${PROMO_IMG}" alt="Rosas rojas" onerror="this.style.display='none'"/>
+        <div class="promo-body">
+          <span class="promo-price">🌹 Desde $349</span>
+          <div class="mc-lbl" style="margin-top:5px">${t.label}</div>
+          <div class="mc-txt" style="white-space:pre-line">${esc(txt)}</div>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button class="btn b-dark b-sm" onclick="copyMsg(${JSON.stringify(txt)},this)">📋 Copiar</button>
+            <button class="btn b-sage b-sm" onclick="waText(${JSON.stringify(name)},${JSON.stringify(txt)})">💬 WhatsApp</button>
+          </div>
+        </div>
+      </div>`;
+      return`<div class="mc">
+        <div class="mc-lbl">${t.label}</div>
+        <div class="mc-txt">${esc(txt)}</div>
+        <div style="display:flex;gap:8px;margin-top:9px">
+          <button class="btn b-dark b-sm" onclick="copyMsg(${JSON.stringify(txt)},this)">📋 Copiar</button>
+          <button class="btn b-sage b-sm" onclick="waText(${JSON.stringify(name)},${JSON.stringify(txt)})">💬 WhatsApp</button>
+        </div>
+      </div>`;
+    }).join("")}`).join("");
+}
+
+function renderMessages(){
+  const q=searchQ.toLowerCase();
+  const f=clients.filter(c=>c.name.toLowerCase().includes(q)||c.phone.includes(q));
+  const sel=clients.find(c=>c.id===selClientId);
+  return`
+  <div style="margin-bottom:12px"><input class="si" id="si" placeholder="Buscar cliente…" value="${esc(searchQ)}"/></div>
+  ${!sel?`
+  <div class="card">
+    <div class="ch"><h3>Selecciona un cliente</h3></div>
+    ${f.map(c=>`
+    <div class="crow" data-sel-client="${c.id}">
+      ${av(c.name)}
+      <div style="flex:1"><div style="font-size:14px;font-weight:500">${esc(c.name)}</div><div style="font-size:12px;color:#7a7a7a">Última compra hace ${daysSince(c.lastPurchase)} días</div></div>
+      <span style="color:#ccc;font-size:18px">›</span>
+    </div>`).join("")}
+  </div>`:`
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+    <button class="btn b-ghost b-sm" onclick="selClientId=null;renderPage()">← Volver</button>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300">Para ${esc(sel.name.split(" ")[0])}</div>
+  </div>
+  ${msgCards(sel.name)}`}`;
+}
+
+// CALENDAR
+function renderCalendar(){
+  const dim=(m,y)=>new Date(y,m+1,0).getDate();
+  const fd=(m,y)=>new Date(y,m,1).getDay();
+  const ecls={confirmed:"evc",pending:"evp",delivered:"evd",cancelled:"evx"};
+  let cells="";
+  for(let i=0;i<fd(calMonth,calYear);i++)cells+=`<div></div>`;
+  for(let day=1;day<=dim(calMonth,calYear);day++){
+    const ds=`${calYear}-${String(calMonth+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+    const isT=ds===TODAY;
+    const evs=deliveries.filter(d=>d.date===ds);
+    cells+=`<div class="cday${isT?" ctoday":""}" onclick="openDelivModal('${ds}')">
+      <div class="cnum">${day}</div>
+      ${evs.map(d=>`<div class="cev ${ecls[d.status]||"evp"}" onclick="event.stopPropagation();openDelivModal(null,${d.id})">${d.clientName.split(" ")[0]}</div>`).join("")}
+    </div>`;
+  }
+  return`
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+    <button class="btn b-ghost b-sm" onclick="prevM()">‹</button>
+    <span style="font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:300">${MONTHS[calMonth]} ${calYear}</span>
+    <button class="btn b-ghost b-sm" onclick="nextM()">›</button>
+  </div>
+  <div class="card" style="padding:12px">
+    <div class="cal-grid" style="margin-bottom:4px">${DAYS.map(d=>`<div class="cdn">${d}</div>`).join("")}</div>
+    <div class="cal-grid">${cells}</div>
+  </div>`;
+}
+function prevM(){if(calMonth===0){calMonth=11;calYear--;}else calMonth--;renderPage();}
+function nextM(){if(calMonth===11){calMonth=0;calYear++;}else calMonth++;renderPage();}
+
+// DELIVERIES
+function renderDeliveries(){
+  const s=[...deliveries].sort((a,b)=>a.date.localeCompare(b.date));
+  return`
+  <div class="card">
+    <div class="ch"><h3>${deliveries.length} entregas</h3></div>
+    ${s.length?s.map(d=>`
+    <div class="dr" style="flex-wrap:wrap;gap:8px">
+      <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
+        <div class="dd"><div class="ddn">${d.date.split("-")[2]}</div><div class="ddm">${MONTHS[parseInt(d.date.split("-")[1])-1].slice(0,3)}</div></div>
+        <div style="min-width:0">
+          <div style="font-size:13.5px;font-weight:500">${esc(d.clientName)}</div>
+          <div style="font-size:12px;color:#7a7a7a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(d.product)}</div>
+          <div style="margin-top:3px">${badge(d.status)}</div>
+        </div>
+      </div>
+      <div class="row-actions">
+        <button class="btn b-ghost b-sm" onclick="openDelivModal(null,${d.id})">✏️</button>
+        <button class="btn b-red b-sm" onclick="delD(${d.id})">🗑</button>
+      </div>
+    </div>`).join(""):`<div class="empty"><div class="empty-ic">📭</div>Sin entregas</div>`}
+  </div>`;
+}
+
+// BIND EVENTS
+function bindEvents(){
+  const si=document.getElementById("si");
+  if(si)si.addEventListener("input",e=>{searchQ=e.target.value;renderPage();});
+  document.querySelectorAll("[data-sel-client]").forEach(el=>{
+    el.addEventListener("click",()=>{selClientId=parseInt(el.dataset.selClient);renderPage();});
+  });
+  document.querySelectorAll("[data-sel-msg]").forEach(el=>{
+    el.addEventListener("click",()=>{selClientId=parseInt(el.dataset.selMsg);tab="messages";
+      document.querySelectorAll(".bni").forEach(n=>n.classList.toggle("on",n.dataset.tab==="messages"));
+      renderActions();renderPage();});
+  });
+}
+
+// CLIENT MODAL
+function openClientModal(editId=null){
+  const c=editId?clients.find(x=>x.id===editId):null;
+  document.getElementById("modal-container").innerHTML=`
+  <div class="ov" id="ov" onclick="if(event.target.id==='ov')closeModal()">
+    <div class="modal">
+      <div class="mhandle"></div>
+      <div class="mhead">
+        <div><div class="mtitle">${c?"Editar Cliente":"Nuevo Cliente"}</div></div>
+        <button class="mclose" onclick="closeModal()">×</button>
+      </div>
+      <div class="mbody">
+        <div class="fld"><label class="flbl">Nombre completo *</label><input class="inp" id="cf-name" value="${esc(c?.name||"")}" placeholder="Nombre Apellido"/></div>
+        <div class="fld"><label class="flbl">Teléfono *</label><input class="inp" type="tel" id="cf-phone" value="${esc(c?.phone||"")}" placeholder="5512345678"/></div>
+        <div class="fld"><label class="flbl">Correo electrónico</label><input class="inp" type="email" id="cf-email" value="${esc(c?.email||"")}" placeholder="correo@email.com"/></div>
+        <div class="fld"><label class="flbl">Etiquetas (separadas por coma)</label><input class="inp" id="cf-tags" value="${esc((c?.tags||[]).join(", "))}" placeholder="boda, frecuente…"/></div>
+        <div class="fld"><label class="flbl">Notas</label><textarea class="inp" id="cf-notes" placeholder="Flores favoritas, ocasiones especiales…">${esc(c?.notes||"")}</textarea></div>
+        <button class="btn b-dark b-full" style="margin-top:4px" onclick="saveClient(${editId||"null"})">${c?"Guardar Cambios":"Agregar Cliente"}</button>
+        ${c?`<button class="btn b-red b-full" style="margin-top:8px" onclick="deleteClient(${c.id})">Eliminar cliente</button>`:""}
+      </div>
+    </div>
+  </div>`;
+}
+
+function saveClient(editId){
+  const name=document.getElementById("cf-name").value.trim();
+  const phone=document.getElementById("cf-phone").value.trim();
+  if(!name||!phone){alert("Nombre y teléfono son obligatorios");return;}
+  const email=document.getElementById("cf-email").value.trim();
+  const tags=document.getElementById("cf-tags").value.split(",").map(t=>t.trim()).filter(Boolean);
+  const notes=document.getElementById("cf-notes").value.trim();
+  if(editId){clients=clients.map(c=>c.id===editId?{...c,name,phone,email,tags,notes}:c);toast("Cliente actualizado ✓");}
+  else{clients.push({id:Date.now(),name,phone,email,lastPurchase:TODAY,totalOrders:0,tags,notes});toast("Cliente guardado ✓");}
+  saveC();closeModal();renderPage();
+}
+
+function deleteClient(id){
+  if(!confirm("¿Eliminar este cliente?"))return;
+  clients=clients.filter(c=>c.id!==id);saveC();closeModal();renderPage();toast("Cliente eliminado");
+}
+
+// DELIVERY MODAL
+function openDelivModal(prefDate=null,editId=null){
+  const d=editId?deliveries.find(x=>x.id===editId):null;
+  const date=d?.date||prefDate||"";
+  document.getElementById("modal-container").innerHTML=`
+  <div class="ov" id="ov" onclick="if(event.target.id==='ov')closeModal()">
+    <div class="modal">
+      <div class="mhandle"></div>
+      <div class="mhead">
+        <div><div class="mtitle">${d?"Editar Entrega":"Agendar Entrega"}</div></div>
+        <button class="mclose" onclick="closeModal()">×</button>
+      </div>
+      <div class="mbody">
+        <div class="fld"><label class="flbl">Cliente *</label>
+          <select class="inp" id="df-client">
+            <option value="">Seleccionar…</option>
+            ${clients.map(c=>`<option value="${c.id}" ${d?.clientId===c.id?"selected":""}>${esc(c.name)}</option>`).join("")}
+          </select>
+        </div>
+        <div class="fld"><label class="flbl">Estado</label>
+          <select class="inp" id="df-status">
+            ${["pending","confirmed","delivered","cancelled"].map(s=>`<option value="${s}" ${(d?.status||"pending")===s?"selected":""}>${{pending:"Pendiente",confirmed:"Confirmada",delivered:"Entregada",cancelled:"Cancelada"}[s]}</option>`).join("")}
+          </select>
+        </div>
+        <div class="fld"><label class="flbl">Fecha *</label><input class="inp" type="date" id="df-date" value="${date}"/></div>
+        <div class="fld"><label class="flbl">Hora</label><input class="inp" type="time" id="df-time" value="${d?.time||""}"/></div>
+        <div class="fld"><label class="flbl">Producto / Arreglo</label><input class="inp" id="df-product" value="${esc(d?.product||"")}" placeholder="Ramo de rosas rojas…"/></div>
+        <div class="fld"><label class="flbl">Dirección</label><input class="inp" id="df-address" value="${esc(d?.address||"")}" placeholder="Calle, número, colonia…"/></div>
+        <div class="fld"><label class="flbl">Notas</label><textarea class="inp" id="df-notes" placeholder="Instrucciones especiales…">${esc(d?.notes||"")}</textarea></div>
+        <button class="btn b-dark b-full" style="margin-top:4px" onclick="saveDeliv(${editId||"null"})">${d?"Guardar Cambios":"Agendar Entrega"}</button>
+        ${editId?`<button class="btn b-red b-full" style="margin-top:8px" onclick="delD(${editId})">Eliminar entrega</button>`:""}
+      </div>
+    </div>
+  </div>`;
+}
+
+function saveDeliv(editId){
+  const clientId=parseInt(document.getElementById("df-client").value);
+  const client=clients.find(c=>c.id===clientId);
+  if(!client){alert("Selecciona un cliente");return;}
+  const date=document.getElementById("df-date").value;
+  if(!date){alert("La fecha es obligatoria");return;}
+  const obj={id:editId||Date.now(),clientId,clientName:client.name,date,
+    time:document.getElementById("df-time").value,
+    product:document.getElementById("df-product").value.trim(),
+    address:document.getElementById("df-address").value.trim(),
+    status:document.getElementById("df-status").value,
+    notes:document.getElementById("df-notes").value.trim()};
+  if(editId){deliveries=deliveries.map(d=>d.id===editId?obj:d);toast("Entrega actualizada ✓");}
+  else{deliveries.push(obj);toast("Entrega agendada ✓");}
+  saveD();closeModal();renderPage();
+}
+
+function delD(id){
+  if(!confirm("¿Eliminar esta entrega?"))return;
+  deliveries=deliveries.filter(d=>d.id!==id);saveD();closeModal();renderPage();toast("Entrega eliminada");
+}
+
+// MSG MODAL
+function openMsgModal(clientId){
+  selClientId=clientId;
+  const c=clients.find(x=>x.id===clientId);if(!c)return;
+  document.getElementById("modal-container").innerHTML=`
+  <div class="ov" id="ov" onclick="if(event.target.id==='ov')closeModal()">
+    <div class="modal">
+      <div class="mhandle"></div>
+      <div class="mhead">
+        <div><div class="mtitle">Para ${esc(c.name)}</div><div class="msub">${esc(c.phone)}</div></div>
+        <button class="mclose" onclick="closeModal()">×</button>
+      </div>
+      <div class="mbody">${msgCards(c.name)}</div>
+    </div>
+  </div>`;
+}
+
+function closeModal(){document.getElementById("modal-container").innerHTML="";}
+
+function copyMsg(text,btn){
+  navigator.clipboard.writeText(text).then(()=>{
+    const o=btn.innerHTML;btn.innerHTML="✓ Copiado";
+    setTimeout(()=>btn.innerHTML=o,2000);toast("Mensaje copiado ✓");
+  }).catch(()=>toast("Copia manualmente el texto"));
+}
+function openWA(phone,text){window.open(`https://wa.me/52${phone.replace(/\D/g,"")}?text=${encodeURIComponent(text)}`,"_blank");}
+function waText(name,text){const c=clients.find(x=>x.name.split(" ")[0]===name.split(" ")[0]);if(c)openWA(c.phone,text);}
+
+// INIT
+renderActions();
+renderPage();
+</script>
+</body>
+</html>
